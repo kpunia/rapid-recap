@@ -69,11 +69,11 @@ struct UploadView: View {
     
     //Calls gpt API to generate notes
     func generateNotes(fileContents: String, completion: @escaping (String) -> Void) {
-        let client = OpenAI(apiToken: "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")
+        let client = OpenAI(apiToken: "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")
 
         let prompt = "Create notes on the following text:\n\n" + fileContents
         let model = "text-davinci-002"
-        let maxTokens = 64
+        let maxTokens = 500
         
         let query = CompletionsQuery(model: model, prompt: prompt, maxTokens: maxTokens)
         client.completions(query: query) { result in
