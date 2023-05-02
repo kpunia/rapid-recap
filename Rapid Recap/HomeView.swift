@@ -7,12 +7,15 @@
 
 import SwiftUI
 
+//File struct
 struct File: Identifiable {
     let id = UUID()
     let name: String
     let data: Data
+    let notes: String
 }
 
+//Homepage - Lists all the files
 struct HomeView: View {
     @Binding var files: [File]
     @State private var searchText = ""
@@ -24,7 +27,9 @@ struct HomeView: View {
         } else {
             return .light
         }
-    }
+    }//Handles dark mode
+    
+    @State private var selectedFile: File?
 
     var body: some View {
         NavigationView {
@@ -37,13 +42,49 @@ struct HomeView: View {
                             Image("Document")
                             Text(file.name)
                                 .font(.headline)
+                            Spacer()
+                            Button(action: {
+                                selectedFile = file
+                            }, label: {
+                                Image(systemName: "info.circle")
+                            })
                         }
                     }
+                    .onDelete(perform: deleteFile)
                 }
                 .searchable(text: $searchText)
-            }
+                .sheet(item: $selectedFile) { file in
+                    NotesView(file: file)
+                }
+            }//End search bar - pasted in
             .navigationTitle("Home")
-        }//End searchBar - Pasted in
-        .colorScheme(scheme)//Dark mode
+        }
+        .colorScheme(scheme)
+    }
+    
+    private func deleteFile(at offsets: IndexSet) {
+            files.remove(atOffsets: offsets)
+    }//Delete file helper function
+}
+
+//Displays the notes
+struct NotesView: View {
+    let file: File
+    
+    var body: some View {
+        VStack {
+            Text("Notes for \(file.name)")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+                .padding()
+            
+            ScrollView {
+                Text(file.notes)
+                    .padding()
+                    .clipShape(RoundedRectangle(cornerRadius: 10))
+                    .shadow(radius: 5)
+                    .padding(.horizontal)
+            }
+        }
     }
 }

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Darwin
 
 struct SettingsView: View {
     @Binding var darkMode: Bool
@@ -28,9 +29,9 @@ struct SettingsView: View {
                 
                 Section(header: Text("Account")) {
                     Button(action: {
-                        // Handle logout action
+                        exit(0)
                     }) {
-                        Text("Log out")
+                        Text("Quit")
                             .foregroundColor(.red)
                     }
                 }
